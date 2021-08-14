@@ -58,24 +58,69 @@
     }
   }
 
-  let selectors = (await storage.get(window.location.hostname)) ?? {};
+  let options = (await storage.get(window.location.hostname)) ?? {};
+  log(options);
 
-  window.addEventListener("keyup", (e) => {
-    if (e.code === "ArrowLeft" && selectors.previous) {
-      document.querySelector(selectors.previous)?.click();
+  window.addEventListener("keydown", (e) => {
+    switch (e.code) {
+      case "ArrowLeft":
+        if (options.previous) {
+          e.preventDefault();
+        }
+        break;
+      case "ArrowRight":
+        if (options.next) {
+          e.preventDefault();
+        }
+        break;
+      case "ArrowUp":
+        if (options.scrollEnabled) {
+          e.preventDefault();
+        }
+        break;
+      case "ArrowDown":
+        if (options.scrollEnabled) {
+          e.preventDefault();
+        }
+        break;
     }
-    if (e.code === "ArrowRight" && selectors.next) {
-      document.querySelector(selectors.next)?.click();
+  });
+  window.addEventListener("keyup", (e) => {
+    switch (e.code) {
+      case "ArrowLeft":
+        if (options.previous) {
+          e.preventDefault();
+          document.querySelector(options.previous)?.click();
+        }
+        break;
+      case "ArrowRight":
+        if (options.next) {
+          e.preventDefault();
+          document.querySelector(options.next)?.click();
+        }
+        break;
+      case "ArrowUp":
+        if (options.scrollEnabled) {
+          e.preventDefault();
+          window.scrollBy(0, -window.innerHeight / 2);
+        }
+        break;
+      case "ArrowDown":
+        if (options.scrollEnabled) {
+          e.preventDefault();
+          window.scrollBy(0, window.innerHeight / 2);
+        }
+        break;
     }
   });
 
-  storage.subscribe(window.location.hostname, (_, curr) => (selectors = curr));
+  storage.subscribe(window.location.hostname, (_, current) => (options = current));
 
   const setPrev = (value) => {
-    storage.set(window.location.hostname, { previous: value, next: selectors.next });
+    storage.set(window.location.hostname, { previous: value, next: options.next });
   };
   const setNext = (value) => {
-    storage.set(window.location.hostname, { previous: selectors.previous, next: value });
+    storage.set(window.location.hostname, { previous: options.previous, next: value });
   };
 
   const ui = new UI();

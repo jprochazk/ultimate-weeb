@@ -1,0 +1,26 @@
+body {
+  display: flex;
+  flex-direction: column;
+  background: transparent;
+  margin: 0;
+  padding: 0;
+  width: 120px;
+}
+
+button {
+  text-align: left;
+  font-family: sans-serif;
+  font-size: 14px;
+  padding: 5px;
+  border: none;
+  background-color: rgb(47, 117, 182);
+  color: white;
+}
+
+button:hover {
+  filter: brightness(120%);
+}
+
+button:hover::content {
+  filter: none;
+}
