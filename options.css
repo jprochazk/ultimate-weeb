@@ -1,0 +1,25 @@
+table {
+  border-collapse: collapse;
+  border: 2px solid #bfcad3;
+}
+
+td,
+th {
+  border: 1px solid #bfcad3;
+  padding: 0.5rem 1rem;
+}
+
+td,
+th {
+  text-align: center;
+}
+
+.btn-clear {
+  background: inherit;
+  border: none;
+}
+
+.btn-clear:hover,
+.btn-clear:active {
+  filter: brightness(70%);
+}
