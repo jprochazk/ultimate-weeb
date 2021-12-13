@@ -12,6 +12,13 @@
   "background": {
     "service_worker": "background.js"
   },
+  "content_scripts": [
+    {
+      "matches": ["https://*/*", "http://*/*"],
+      "js": ["foreground.js"],
+      "css": ["foreground.css"]
+    }
+  ],
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
