@@ -26,7 +26,6 @@ import { storage } from "./storage.js";
   }
 
   storage.subscribe(null, (prev, current) => {
-    console.log(prev, current);
     updateTable();
   });
   updateTable();

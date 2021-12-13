@@ -1,6 +1,10 @@
 .uw-ext-highlight {
   pointer-events: none;
-  position: absolute;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
   background: rgb(1, 122, 235);
   opacity: 0.4;
 }

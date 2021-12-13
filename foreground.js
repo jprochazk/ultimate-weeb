@@ -7,6 +7,34 @@
 
   const log = (...args) => console.log("[Ultimate Weeb]", ...args);
 
+  /** @returns {string} */
+  const generateSelector = (/** @type {HTMLElement} */ el) => {
+    let { tagName, id, classList, parentElement } = el;
+    let out = "";
+
+    // if we have a valid ID, then use it directly, as IDs are unique
+    if (id !== "" && id.match(/^[a-z].*/)) {
+      out += `#${id}`;
+      return out;
+    }
+
+    out += tagName;
+    if (classList.length > 0) out += "." + [...classList.values()].map(v => v.replace(/:/g, "\\:")).join(".");
+    if ((parentElement?.childElementCount ?? 0) > 1) {
+      let childIndex = 1;
+      let sib = el.previousElementSibling;
+      while (sib) {
+        childIndex++;
+        sib = sib.previousElementSibling;
+      }
+      out += `:nth-child(${childIndex})`;
+    }
+    if (document.querySelectorAll(out).length === 1) return out;
+    if (!parentElement) return out;
+
+    return `${generateSelector(parentElement)} > ${out}`;
+  }
+
   class UI {
     attached = false;
 
@@ -15,7 +43,7 @@
       this.highlight.className = "uw-ext-highlight";
 
       window.addEventListener("mousemove", this.mousemove);
-      window.addEventListener("click", this.click);
+      window.addEventListener("click", this.click, {capture: true});
     }
 
     /** @type {HTMLElement | null} */
@@ -31,20 +59,15 @@
         this.highlight.style.height = `${rect.height}px`;
       }
     };
-    click = (evt) => {
+    click = (/** @type {MouseEvent} */ evt) => {
       if (!this.attached || !this.currentTarget) return;
-      evt.stopPropagation();
+      evt.stopImmediatePropagation();
       evt.preventDefault();
-      // TODO: smarter selector generation?
-      let selector = `${this.currentTarget.tagName}`;
-      if (this.currentTarget.className)
-        selector += `.${this.currentTarget.className.split(" ").join(".")}`;
-      if (this.currentTarget.id) selector += `#${this.currentTarget.id}`;
-      this.onSelectorUpdated(selector);
+      this.onSelectorUpdated(generateSelector(this.currentTarget));
       this.hide();
     };
 
-    onSelectorUpdated = () => {};
+    onSelectorUpdated = () => { };
 
     show() {
       if (this.attached) return;
@@ -59,7 +82,6 @@
   }
 
   let options = (await storage.get(window.location.hostname)) ?? {};
-  log(options);
 
   window.addEventListener("keydown", (e) => {
     switch (e.code) {
@@ -139,4 +161,6 @@
         break;
     }
   });
+
+  log("Loaded");
 })();

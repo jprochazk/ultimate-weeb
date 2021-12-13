@@ -3,6 +3,8 @@
 
 import { storage } from "./storage.js";
 
+window._storage = storage;
+
 /** @returns {Promise<number | null>} */
 async function getActiveTabId() {
   const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -52,7 +54,6 @@ const updateScrollToggle = () =>
   });
 
 storage.subscribe(null, (prev, current) => {
-  console.log(prev, current);
   updateScrollToggle();
 });
 updateScrollToggle();

@@ -48,12 +48,9 @@ export const storage = {
    */
   setIn: (path, value) =>
     new Promise(async (resolve) => {
-      console.log(path);
       const first = path.shift();
-      const current = await storage.get(first);
-      console.log("before", JSON.stringify(current));
+      const current = await storage.get(first) ?? {};
       setDeep(current, path, value);
-      console.log("after", JSON.stringify(current));
       storage.set(first, current);
     }),
   /**
